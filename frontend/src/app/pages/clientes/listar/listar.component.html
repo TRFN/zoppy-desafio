@@ -1,46 +1,64 @@
 <div class="container py-4">
-	<div class="card shadow-sm rounded">
-		<div class="card-header bg-primary text-white">
+	<div class="text-center mb-4">
+		<h2 class="fw-bold">Clientes Cadastrados</h2>
+		<p class="text-muted mb-0">Abaixo está a lista de clientes registrados no sistema</p>
+	</div>
+
+	<div class="d-flex justify-content-end mb-3">
+		<button class="btn btn-success">
+			<i class="bi bi-plus-circle me-2"></i> Adicionar Cliente
+		</button>
+	</div>
+
+	<div class="card shadow-sm">
+		<div class="card-header bg-success bg-gradient text-white">
 			<h5 class="mb-0">Listagem de Clientes</h5>
 		</div>
-
-		<div class="card-body">
-			<div class="table-responsive">
-				<table class="table table-hover table-bordered table-sm">
-					<thead class="table-light">
-						<tr>
-							<th>#</th>
-							<th>Nome</th>
-							<th>Email</th>
-							<th>CEP</th>
-							<th>Cidade</th>
-							<th>UF</th>
-							<th>Ações</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr *ngFor="let cliente of clientesExibidos; let i = index">
-							<td>{{ i + 1 + (paginaAtual - 1) * porPagina }}</td>
-							<td>{{ cliente.nome }}</td>
-							<td>{{ cliente.email }}</td>
-							<td>{{ cliente.cep }}</td>
-							<td>{{ cliente.localidade }}</td>
-							<td>{{ cliente.uf }}</td>
-							<td>
-								<button class="btn btn-sm btn-outline-primary me-1">Editar</button>
-								<button class="btn btn-sm btn-outline-danger">Excluir</button>
-							</td>
-						</tr>
-						<tr *ngIf="clientesExibidos.length === 0">
-							<td colspan="7" class="text-center">Nenhum cliente encontrado.</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-
-			<!-- Paginação -->
-			<nav>
-				<ul class="pagination justify-content-center">
+		<div class="table-responsive-sm">
+			<table class="table table-hover table-bordered table-striped table-sm align-middle mb-0">
+				<thead class="table-success">
+					<tr>
+						<th>Nome</th>
+						<th>Email</th>
+						<th>Telefone</th>
+						<th>Data Nascimento</th>
+						<th>CEP</th>
+						<th>Logradouro</th>
+						<th>Bairro</th>
+						<th>Localidade</th>
+						<th>UF</th>
+						<th>Ações</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let cliente of clientesExibidos">
+						<td data-label="Nome">{{ cliente.nome }}</td>
+						<td data-label="Email">{{ cliente.email }}</td>
+						<td data-label="Telefone">{{ cliente.telefone }}</td>
+						<td data-label="Data Nascimento">{{ cliente.datanascimento }}</td>
+						<td data-label="CEP">{{ cliente.cep }}</td>
+						<td data-label="Logradouro">{{ cliente.logradouro }}</td>
+						<td data-label="Bairro">{{ cliente.bairro }}</td>
+						<td data-label="Localidade">{{ cliente.localidade }}</td>
+						<td data-label="UF">{{ cliente.uf }}</td>
+						<td data-label="Ações" class="text-nowrap">
+							<button class="btn btn-sm btn-outline-primary me-2">
+								<i class="bi bi-pencil"></i> Editar
+							</button>
+							<button class="btn btn-sm btn-outline-danger">
+								<i class="bi bi-trash"></i> Excluir
+							</button>
+						</td>
+					</tr>
+					<tr *ngIf="clientesExibidos.length === 0">
+						<td colspan="10" class="text-center text-muted">Nenhum cliente encontrado.</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="card-footer d-flex justify-content-center">
+			<nav aria-label="Paginação">
+				<ul class="pagination pagination-sm mb-0">
 					<li class="page-item" [class.disabled]="paginaAtual === 1">
 						<button class="page-link" (click)="mudarPagina(paginaAtual - 1)">Anterior</button>
 					</li>
@@ -48,7 +66,7 @@
 						<button class="page-link" (click)="mudarPagina(pagina)">{{ pagina }}</button>
 					</li>
 					<li class="page-item" [class.disabled]="paginaAtual === totalPaginas">
-						<button class="page-link" (click)="mudarPagina(paginaAtual + 1)">Próxima</button>
+						<button class="page-link" (click)="mudarPagina(paginaAtual + 1)">Próximo</button>
 					</li>
 				</ul>
 			</nav>
