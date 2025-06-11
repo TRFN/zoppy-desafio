@@ -19,7 +19,10 @@ export class ListarComponent implements OnInit {
   totalPaginas = 1;
   paginas: number[] = [];
 
-  constructor(private clientesService: ClientesService) { }
+  constructor(
+    private clientesService: ClientesService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.clientesService.getTodos().subscribe((dados) => {
@@ -27,6 +30,10 @@ export class ListarComponent implements OnInit {
       this.totalPaginas = Math.ceil(this.clientes.length / this.porPagina);
       this.atualizarPaginacao();
     });
+  }
+
+  adicionarCliente(): void {
+    this.router.navigate(['/clientes/novo']);
   }
 
   mudarPagina(pagina: number): void {

@@ -1,1 +1,73 @@
-<p>novo works!</p>
+<div class="container mt-3">
+	<div class="text-start mb-4">
+		<h2 class="fw-bold">Adicionar Cliente</h2>
+		<p class="text-muted mb-0">Preencha os dados abaixo para adicionar um novo cliente</p>
+	</div>
+	<form class="row" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+		<div class="mb-3 col-md-7">
+			<label for="nome" class="form-label">Nome *</label>
+			<input type="text" id="nome" formControlName="nome" class="form-control" />
+			<div *ngIf="form.get('nome')?.invalid && form.get('nome')?.touched" class="text-danger">
+				Nome é obrigatório.
+			</div>
+		</div>
+
+		<div class="mb-3 col-md-5">
+			<label for="email" class="form-label">Email *</label>
+			<input type="email" id="email" formControlName="email" class="form-control" />
+			<div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="text-danger">
+				Informe um email válido.
+			</div>
+		</div>
+
+		<div class="mb-3 col-md-4">
+			<label for="telefone" class="form-label">Telefone *</label>
+			<input type="text" id="telefone" formControlName="telefone" class="form-control" />
+			<div *ngIf="form.get('telefone')?.invalid && form.get('telefone')?.touched" class="text-danger">
+				Telefone é obrigatório.
+			</div>
+		</div>
+
+		<div class="mb-3 col-md-4">
+			<label for="datanascimento" class="form-label">Data de Nascimento *</label>
+			<input type="date" id="datanascimento" formControlName="datanascimento" class="form-control" />
+			<div *ngIf="form.get('datanascimento')?.invalid && form.get('datanascimento')?.touched" class="text-danger">
+				Data de nascimento é obrigatória.
+			</div>
+		</div>
+
+		<div class="mb-3">
+			<label for="cep" class="form-label">CEP *</label>
+			<input type="text" id="cep" (input)="buscarCep()" formControlName="cep" class="form-control" />
+			<div *ngIf="form.get('cep')?.invalid && form.get('cep')?.touched" class="text-danger">
+				CEP é obrigatório.
+			</div>
+		</div>
+
+		<div class="mb-3">
+			<label for="logradouro" class="form-label">Logradouro</label>
+			<input type="text" id="logradouro" formControlName="logradouro" class="form-control" />
+		</div>
+
+		<div class="mb-3">
+			<label for="bairro" class="form-label">Bairro</label>
+			<input type="text" id="bairro" formControlName="bairro" class="form-control" />
+		</div>
+
+		<div class="mb-3">
+			<label for="localidade" class="form-label">Localidade</label>
+			<input type="text" id="localidade" formControlName="localidade" class="form-control" />
+		</div>
+
+		<div class="mb-3">
+			<label for="uf" class="form-label">UF</label>
+			<input type="text" id="uf" formControlName="uf" class="form-control" maxlength="2" />
+		</div>
+
+		<button type="submit" class="btn btn-primary">Salvar</button>
+		<button type="button" class="btn btn-secondary ms-2" (click)="voltarParaLista()">
+			Cancelar
+		</button>
+	</form>
+</div>

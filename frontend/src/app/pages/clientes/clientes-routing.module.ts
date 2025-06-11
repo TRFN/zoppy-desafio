@@ -9,6 +9,7 @@ import { EditarComponent } from './editar/editar.component';
 // Definição das rotas para o módulo de clientes
 const routes: Routes = [
   { path: '', component: ListarComponent },
+  { path: 'listar', component: ListarComponent },
   { path: 'novo', component: NovoComponent },
   { path: 'editar/:id', component: EditarComponent }
 ];
