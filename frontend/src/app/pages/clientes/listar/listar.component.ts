@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientesService } from '../clientes.service';
+import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-listar',
-  imports: [],
+  imports: [CommonModule, HttpClientModule],
   templateUrl: './listar.component.html',
-  styleUrl: './listar.component.css'
+  styleUrls: ['./listar.component.css']
 })
 export class ListarComponent implements OnInit {
   clientes: any[] = [];
