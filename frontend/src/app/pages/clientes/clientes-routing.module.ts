@@ -10,7 +10,7 @@ import { EditarComponent } from './editar/editar.component';
 const routes: Routes = [
   { path: '', component: ListarComponent },
   { path: 'novo', component: NovoComponent },
-  { path: ':id/editar', component: EditarComponent },
+  { path: 'editar/:id', component: EditarComponent }
 ];
 
 // Módulo de roteamento para o módulo de clientes
