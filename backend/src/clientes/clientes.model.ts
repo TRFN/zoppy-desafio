@@ -36,7 +36,7 @@ export class Cliente extends Model {
 		type: DataType.STRING,
 		allowNull: true,
 	})
-	logradouro: string;
+	rua: string;
 
 	@Column({
 		type: DataType.STRING,
@@ -48,7 +48,7 @@ export class Cliente extends Model {
 		type: DataType.STRING,
 		allowNull: true,
 	})
-	localidade: string;
+	cidade: string;
 
 	@Column({
 		type: DataType.STRING,
