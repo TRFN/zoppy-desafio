@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ClientesService } from '../clientes.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import IMask from 'imask';
 
 @Component({
   selector: 'app-novo',
@@ -11,6 +12,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './novo.component.html',
   styleUrls: ['./novo.component.css'],
 })
+
 export class NovoComponent {
   form: FormGroup;
 
@@ -25,12 +27,27 @@ export class NovoComponent {
       telefone: ['', Validators.required],
       datanascimento: ['', Validators.required],
       cep: ['', Validators.required],
-      logradouro: [''],
+      rua: [''],
       bairro: [''],
-      localidade: [''],
+      cidade: [''],
       uf: [''],
     });
   }
+
+  @ViewChild('cepInput') cepInput!: ElementRef;
+  @ViewChild('ruaInput') ruaInput!: ElementRef;
+
+  ngAfterViewInit(): void {
+    const popoverTrigger = this.cepInput.nativeElement;
+    if (popoverTrigger) {
+      // Aplicando máscara de CEP no campo de entrada
+
+      IMask(popoverTrigger, {
+        mask: '00000-000'
+      });
+    }
+  }
+
 
   voltarParaLista(): void {
     this.router.navigate(['/clientes']);
@@ -38,22 +55,23 @@ export class NovoComponent {
 
   buscarCep(): void {
     const cep = this.form.get('cep')?.value;
-    if (cep && cep.length === 8) {
-      this.clientesService.getCep(cep).subscribe({
+    if (cep && cep.length === 9) {
+      this.clientesService.getCep(cep.replace(/[^0-9]/g, '')).subscribe({
         next: (dados) => {
           this.form.patchValue({
-            logradouro: dados.logradouro,
+            rua: dados.logradouro + " Nº ",
             bairro: dados.bairro,
-            localidade: dados.localidade,
+            cidade: dados.localidade,
             uf: dados.uf,
           });
+          setTimeout(() => {
+            this.ruaInput.nativeElement.focus();
+          }, 0);
         },
         error: (err) => {
           alert('Erro ao buscar CEP: ' + err.message);
         },
       });
-    } else {
-      alert('CEP inválido. Deve conter 8 dígitos.');
     }
   }
 

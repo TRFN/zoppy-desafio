@@ -10,7 +10,7 @@ export class ClientesService {
 
 	constructor(private http: HttpClient) { }
 
-	getTodos(): Observable<any[]> {
+	lerClientes(): Observable<any[]> {
 		return this.http.get<any[]>(`${this.apiUrl}/clientes`);
 	}
 
@@ -29,7 +29,7 @@ export class ClientesService {
 	getClientePorId(id: number): Observable<any> {
 		return this.http.get<any>(`${this.apiUrl}/clientes/${id}`);
 	}
-	
+
 	getCep(cep: string): Observable<any> {
 		return this.http.get<any>(`${this.apiUrl}/cep/${cep}`);
 	}

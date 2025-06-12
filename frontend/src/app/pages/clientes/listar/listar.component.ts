@@ -25,7 +25,7 @@ export class ListarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.clientesService.getTodos().subscribe((dados) => {
+    this.clientesService.lerClientes().subscribe((dados) => {
       this.clientes = dados;
       this.totalPaginas = Math.ceil(this.clientes.length / this.porPagina);
       this.atualizarPaginacao();

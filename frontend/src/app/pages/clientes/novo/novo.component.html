@@ -1,12 +1,17 @@
 <div class="container mt-3">
-	<div class="text-start mb-4">
-		<h2 class="fw-bold">Adicionar Cliente</h2>
-		<p class="text-muted mb-0">Preencha os dados abaixo para adicionar um novo cliente</p>
+	<div class="d-flex justify-content-between align-items-center mb-3">
+		<div class="text-start mb-4 col-8">
+			<h2 class="fw-bold">Adicionar Cliente</h2>
+			<p class="text-muted mb-0">Preencha os dados abaixo para adicionar um novo cliente</p>
+		</div>
+		<a (click)="voltarParaLista()" class="btn btn-secondary">
+			<i class="bi bi-arrow-left me-2"></i> Voltar
+		</a>
 	</div>
 	<form class="row" [formGroup]="form" (ngSubmit)="onSubmit()">
 
-		<div class="mb-3 col-md-7">
-			<label for="nome" class="form-label">Nome *</label>
+		<div class="mb-3 col-md-12">
+			<label for="nome" class="form-label">Nome Completo *</label>
 			<input type="text" id="nome" formControlName="nome" class="form-control" />
 			<div *ngIf="form.get('nome')?.invalid && form.get('nome')?.touched" class="text-danger">
 				Nome é obrigatório.
@@ -29,7 +34,7 @@
 			</div>
 		</div>
 
-		<div class="mb-3 col-md-4">
+		<div class="mb-3 col-md-3">
 			<label for="datanascimento" class="form-label">Data de Nascimento *</label>
 			<input type="date" id="datanascimento" formControlName="datanascimento" class="form-control" />
 			<div *ngIf="form.get('datanascimento')?.invalid && form.get('datanascimento')?.touched" class="text-danger">
@@ -37,37 +42,51 @@
 			</div>
 		</div>
 
-		<div class="mb-3">
+		<div class="mb-3 col-lg-3 col-md-4">
 			<label for="cep" class="form-label">CEP *</label>
-			<input type="text" id="cep" (input)="buscarCep()" formControlName="cep" class="form-control" />
+			<div class="input-group">
+				<span class="input-group-text">
+					<i class="bi bi-search"></i>
+				</span>
+				<input #cepInput type="text" id="cep" (input)="buscarCep()" formControlName="cep" class="form-control"
+					data-bs-toggle="popover" data-bs-trigger="focus" title="Dica"
+					data-bs-content="Ao digitar o CEP, o endereço será carregado automaticamente." />
+			</div>
 			<div *ngIf="form.get('cep')?.invalid && form.get('cep')?.touched" class="text-danger">
 				CEP é obrigatório.
 			</div>
+
 		</div>
 
-		<div class="mb-3">
-			<label for="logradouro" class="form-label">Logradouro</label>
-			<input type="text" id="logradouro" formControlName="logradouro" class="form-control" />
+		<div class="mb-3 col-md-8 col-lg-9">
+			<label for="rua" class="form-label">Rua</label>
+			<input #ruaInput type="text" id="rua" formControlName="rua" class="form-control" />
 		</div>
 
-		<div class="mb-3">
+		<div class="mb-3 col-md-4 col-lg-4">
 			<label for="bairro" class="form-label">Bairro</label>
 			<input type="text" id="bairro" formControlName="bairro" class="form-control" />
 		</div>
 
-		<div class="mb-3">
-			<label for="localidade" class="form-label">Localidade</label>
-			<input type="text" id="localidade" formControlName="localidade" class="form-control" />
+		<div class="mb-3 col-md-4 col-lg-4">
+			<label for="cidade" class="form-label">Cidade</label>
+			<input type="text" id="cidade" formControlName="cidade" class="form-control" />
 		</div>
 
-		<div class="mb-3">
-			<label for="uf" class="form-label">UF</label>
+		<div class="mb-3 col-md-4 col-lg-4">
+			<label for="uf" class="form-label">Estado</label>
 			<input type="text" id="uf" formControlName="uf" class="form-control" maxlength="2" />
 		</div>
+		<div class="mb-3 col-12 d-flex justify-content-end">
+			<button type="submit" class="btn btn-success me-3">
+				<i class="bi bi-save me-2"></i>
+				Cadastrar
+			</button>
+			<button type="button" class="btn btn-secondary ms-3" (click)="voltarParaLista()">
+				<i class="bi bi-x-circle me-2"></i>
+				Cancelar
+			</button>
+		</div>
 
-		<button type="submit" class="btn btn-primary">Salvar</button>
-		<button type="button" class="btn btn-secondary ms-2" (click)="voltarParaLista()">
-			Cancelar
-		</button>
 	</form>
 </div>
