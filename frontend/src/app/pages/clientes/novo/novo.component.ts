@@ -3,7 +3,9 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ClientesService } from '../clientes.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import * as bootstrap from 'bootstrap';
 import IMask from 'imask';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-novo',
@@ -27,30 +29,61 @@ export class NovoComponent {
       telefone: ['', Validators.required],
       datanascimento: ['', Validators.required],
       cep: ['', Validators.required],
-      rua: [''],
-      bairro: [''],
-      cidade: [''],
-      uf: [''],
+      rua: ['', Validators.required],
+      bairro: ['', Validators.required],
+      cidade: ['', Validators.required],
+      uf: ['', Validators.required],
     });
   }
 
   @ViewChild('cepInput') cepInput!: ElementRef;
   @ViewChild('ruaInput') ruaInput!: ElementRef;
+  @ViewChild('telefoneInput') telefoneInput!: ElementRef;
 
   ngAfterViewInit(): void {
-    const popoverTrigger = this.cepInput.nativeElement;
-    if (popoverTrigger) {
-      // Aplicando máscara de CEP no campo de entrada
+    const camposComMascara = {
+      "cep": [this.cepInput.nativeElement, '00000-000'],
+      "telefone": [this.telefoneInput.nativeElement, ['(00) 0000-0000', '(00) 00000-0000']],
+    };
+    Object.entries(camposComMascara).forEach(([campo, [elemento, mascara]]) => {
+      if (elemento) {
+        IMask(elemento, { mask: mascara });
+      }
+    });
 
-      IMask(popoverTrigger, {
-        mask: '00000-000'
+    // forcar tooltip nos inputs
+    const inputs = document.querySelectorAll('input[data-bs-toggle="tooltip"]');
+    inputs.forEach((input) => {
+      const tooltip = new bootstrap.Tooltip(input, {
+        trigger: 'focus',
+        placement: 'top',
       });
-    }
+      input.addEventListener('focus', () => {
+        tooltip.show();
+      });
+      input.addEventListener('blur', () => {
+        tooltip.hide();
+      });
+    });
   }
 
 
   voltarParaLista(): void {
-    this.router.navigate(['/clientes']);
+    Swal.fire({
+      title: 'Deseja voltar?',
+      text: 'Deseja mesmo voltar para a lista de clientes? Todas as alterações não salvas serão perdidas.',
+      icon: 'warning',
+      showCancelButton: true,
+      showConfirmButton: true,
+      confirmButtonText: 'Sim, voltar',
+      cancelButtonText: 'Não, continuar',
+      timer: 5000,
+      timerProgressBar: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/clientes']);
+      }
+    });
   }
 
   buscarCep(): void {
@@ -58,6 +91,14 @@ export class NovoComponent {
     if (cep && cep.length === 9) {
       this.clientesService.getCep(cep.replace(/[^0-9]/g, '')).subscribe({
         next: (dados) => {
+          if (dados.erro && dados.erro === "true") {
+            Swal.fire({
+              icon: 'error',
+              title: 'CEP inválido',
+              text: 'O CEP informado não foi encontrado.',
+            });
+            return;
+          }
           this.form.patchValue({
             rua: dados.logradouro + " Nº ",
             bairro: dados.bairro,
@@ -69,8 +110,13 @@ export class NovoComponent {
           }, 0);
         },
         error: (err) => {
-          alert('Erro ao buscar CEP: ' + err.message);
-        },
+          Swal.fire({
+            icon: 'error',
+            title: 'Erro ao buscar CEP',
+            text: 'Não foi possível buscar as informações do CEP. Verifique a conexão com a internet ou o formato do CEP.',
+          });
+          console.error('Erro ao buscar CEP:', err);
+        }
       });
     }
   }
