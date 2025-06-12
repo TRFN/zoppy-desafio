@@ -1,4 +1,4 @@
-@media (max-width: 576px) {
+@media (max-width: 1024px) {
 	.table thead {
 		display: none;
 	}
@@ -22,4 +22,22 @@
 		color: #6c757d;
 		flex-basis: 50%;
 	}
+
+
+
+	.table thead th:last-child {
+		width: auto;
+	}
+
+	.table tbody tr td:last-child {
+		padding: 0;
+	}
+}
+
+.table thead th:last-child {
+	width: 150px;
+}
+
+.table tbody tr td:last-child {
+	padding: 0 15px;
 }

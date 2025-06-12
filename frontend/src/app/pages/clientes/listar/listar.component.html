@@ -1,32 +1,42 @@
 <div class="container py-4">
 	<div class="text-center mb-4">
-		<h2 class="fw-bold">Clientes Cadastrados</h2>
+		<h2 class="fw-bold">Sistema de cadastro de clientes</h2>
 		<p class="text-muted mb-0">Abaixo está a lista de clientes registrados no sistema</p>
 	</div>
 
-	<div class="d-flex justify-content-end mb-3">
-		<button class="btn btn-success" (click)="adicionarCliente()">
-			<i class="bi bi-plus-circle me-2"></i> Adicionar Cliente
-		</button>
+	<div class="row justify-content-between mb-3">
+		<div class="col-lg-6 mb-2 mb-lg-0 order-lg-0 order-1 mt-4 mt-lg-0">
+			<div class="input-group">
+				<span class="input-group-text">
+					<i class="bi bi-search"></i>
+				</span>
+				<input #filtroPesquisa type="text" class="form-control"
+					placeholder="Pesquisar por nome, email ou telefone" (input)="filtrarClientes()" />
+
+				<button #limparPesquisa class="input-group-text d-none" (click)="limparFiltro()">
+					<i class="bi bi-x-circle"></i>
+				</button>
+
+			</div>
+		</div>
+		<div class="col-lg-6 text-end">
+			<button class="btn btn-success" (click)="adicionarCliente()">
+				<i class="bi bi-plus-circle me-2"></i> Adicionar Cliente
+			</button>
+		</div>
 	</div>
 
 	<div class="card shadow-sm">
 		<div class="card-header bg-success bg-gradient text-white">
-			<h5 class="mb-0">Listagem de Clientes</h5>
+			<h5 class="mb-0">Clientes Cadastrados</h5>
 		</div>
-		<div class="table-responsive-sm">
+		<div class="table-responsive-lg">
 			<table class="table table-hover table-bordered table-striped table-sm align-middle mb-0">
 				<thead class="table-success">
 					<tr>
 						<th>Nome</th>
 						<th>Email</th>
 						<th>Telefone</th>
-						<th>Data Nascimento</th>
-						<th>CEP</th>
-						<th>Logradouro</th>
-						<th>Bairro</th>
-						<th>Localidade</th>
-						<th>UF</th>
 						<th>Ações</th>
 					</tr>
 				</thead>
@@ -35,14 +45,8 @@
 						<td data-label="Nome">{{ cliente.nome }}</td>
 						<td data-label="Email">{{ cliente.email }}</td>
 						<td data-label="Telefone">{{ cliente.telefone }}</td>
-						<td data-label="Data Nascimento">{{ cliente.datanascimento }}</td>
-						<td data-label="CEP">{{ cliente.cep }}</td>
-						<td data-label="Logradouro">{{ cliente.logradouro }}</td>
-						<td data-label="Bairro">{{ cliente.bairro }}</td>
-						<td data-label="Localidade">{{ cliente.localidade }}</td>
-						<td data-label="UF">{{ cliente.uf }}</td>
 						<td data-label="Ações" class="text-nowrap">
-							<button class="btn btn-sm btn-outline-primary me-2">
+							<button class="btn btn-sm btn-outline-primary me-3">
 								<i class="bi bi-pencil"></i> Editar
 							</button>
 							<button class="btn btn-sm btn-outline-danger">

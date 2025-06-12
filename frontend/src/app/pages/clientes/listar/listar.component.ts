@@ -1,23 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ClientesService } from '../clientes.service';
-import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-listar',
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule],
   templateUrl: './listar.component.html',
   styleUrls: ['./listar.component.css']
 })
 export class ListarComponent implements OnInit {
   clientes: any[] = [];
   clientesExibidos: any[] = [];
+  filtro: string = '';
 
   paginaAtual = 1;
   porPagina = 5;
   totalPaginas = 1;
   paginas: number[] = [];
+
+  @ViewChild('filtroPesquisa') filtroPesquisa!: ElementRef;
 
   constructor(
     private clientesService: ClientesService,
@@ -25,11 +28,47 @@ export class ListarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.lerClientes();
+
+  }
+
+  private lerClientes(filtro?: (entrada: any) => boolean): void {
     this.clientesService.lerClientes().subscribe((dados) => {
       this.clientes = dados;
-      this.totalPaginas = Math.ceil(this.clientes.length / this.porPagina);
+      this.clientes.sort((a, b) => a.nome.localeCompare(b.nome)); // Ordenar por nome
+      this.clientes.map(cliente => {
+        cliente.datanascimento = new Date(cliente.datanascimento).toLocaleDateString('pt-BR');
+        cliente.telefone = cliente.telefone.replace(/[^0-9]/g, '').replace(/(\d{2})(\d{4,5})(\d{4})/, '($1) $2-$3'); // Formatar telefone
+      });
+
+      if (filtro) {
+        this.clientes = this.clientes.filter(filtro);
+      }
+
+      this.clientesExibidos = this.clientes;
+      this.totalPaginas = Math.ceil(this.clientesExibidos.length / this.porPagina);
+      this.paginaAtual = 1; // Resetar para a primeira página após o filtro
       this.atualizarPaginacao();
     });
+  }
+
+  filtrarClientes(): void {
+    const filtro = new RegExp(this.filtroPesquisa.nativeElement.value, "gi");
+    if (!filtro) {
+      this.lerClientes();
+      return;
+    } else {
+      this.lerClientes(cliente =>
+        filtro.test(cliente.nome) ||
+        filtro.test(cliente.email) ||
+        filtro.test(cliente.telefone)
+      );
+    }
+  }
+
+  limparFiltro(): void {
+    this.filtroPesquisa.nativeElement.value = '';
+    this.lerClientes();
   }
 
   adicionarCliente(): void {
