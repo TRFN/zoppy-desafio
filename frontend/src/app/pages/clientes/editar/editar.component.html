@@ -1,1 +1,103 @@
-<p>editar works!</p>
+<div class="container mt-3">
+	<div class="d-flex justify-content-between align-items-center mb-3">
+		<div class="text-start mb-4 col-8">
+			<h2 class="fw-bold">Editar Cliente</h2>
+			<p class="text-muted mb-0">Atualize os dados abaixo para editar o cliente</p>
+		</div>
+		<a (click)="voltarParaLista()" class="btn btn-secondary">
+			<i class="bi bi-arrow-left me-2"></i> Voltar
+		</a>
+	</div>
+	<form class="row" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+		<div class="mb-3 col-md-12">
+			<label for="nome" class="form-label">Nome Completo <span>*</span></label>
+			<input type="text" id="nome" formControlName="nome" class="form-control" />
+			<div *ngIf="form.get('nome')?.invalid && form.get('nome')?.touched" class="text-danger">
+				Insira o nome completo do cliente.
+			</div>
+		</div>
+
+		<div class="mb-3 col-md-5">
+			<label for="email" class="form-label">Email <span>*</span></label>
+			<input type="email" id="email" formControlName="email" class="form-control" />
+			<div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="text-danger">
+				Informe um email válido.
+			</div>
+		</div>
+
+		<div class="mb-3 col-md-4">
+			<label for="telefone" class="form-label">Telefone <span>*</span></label>
+			<input #telefoneInput type="text" id="telefone" formControlName="telefone" class="form-control" />
+			<div *ngIf="form.get('telefone')?.invalid && form.get('telefone')?.touched" class="text-danger">
+				O cadastro do telefone é obrigatório.
+			</div>
+		</div>
+
+		<div class="mb-3 col-md-3">
+			<label for="datanascimento" class="form-label">Data de Nascimento <span>*</span></label>
+			<input type="date" id="datanascimento" formControlName="datanascimento" class="form-control" />
+			<div *ngIf="form.get('datanascimento')?.invalid && form.get('datanascimento')?.touched" class="text-danger">
+				Preencha uma data válida.
+			</div>
+		</div>
+
+		<div class="mb-3 col-lg-3 col-md-4">
+			<label for="cep" class="form-label">CEP <span>*</span></label>
+			<div class="input-group">
+				<span class="input-group-text">
+					<i class="bi bi-search"></i>
+				</span>
+				<input #cepInput type="text" id="cep" (input)="buscarCep()" formControlName="cep" class="form-control"
+					data-bs-toggle="tooltip" title="Ao digitar o CEP, o endereço será carregado automaticamente." />
+			</div>
+			<div *ngIf="form.get('cep')?.invalid && form.get('cep')?.touched" class="text-danger">
+				CEP é obrigatório.
+			</div>
+
+		</div>
+
+		<div class="mb-3 col-md-8 col-lg-9">
+			<label for="rua" class="form-label">Rua <span>*</span></label>
+			<input #ruaInput type="text" id="rua" formControlName="rua" class="form-control" />
+			<div *ngIf="form.get('rua')?.invalid && form.get('rua')?.touched" class="text-danger">
+				Rua é obrigatória.
+			</div>
+		</div>
+
+		<div class="mb-3 col-md-4 col-lg-4">
+			<label for="bairro" class="form-label">Bairro <span>*</span></label>
+			<input type="text" id="bairro" formControlName="bairro" class="form-control" />
+			<div *ngIf="form.get('bairro')?.invalid && form.get('bairro')?.touched" class="text-danger">
+				Bairro é obrigatório.
+			</div>
+		</div>
+
+		<div class="mb-3 col-md-4 col-lg-4">
+			<label for="cidade" class="form-label">Cidade <span>*</span></label>
+			<input type="text" id="cidade" formControlName="cidade" class="form-control" />
+			<div *ngIf="form.get('cidade')?.invalid && form.get('cidade')?.touched" class="text-danger">
+				Cidade é obrigatória.
+			</div>
+		</div>
+
+		<div class="mb-3 col-md-4 col-lg-4">
+			<label for="uf" class="form-label">Estado <span>*</span></label>
+			<input type="text" id="uf" formControlName="uf" class="form-control" maxlength="2" />
+			<div *ngIf="form.get('uf')?.invalid && form.get('uf')?.touched" class="text-danger">
+				Estado é obrigatório.
+			</div>
+		</div>
+		<div class="mb-3 col-12 d-flex justify-content-end">
+			<button type="submit" class="btn btn-primary me-3">
+				<i class="bi bi-save me-2"></i>
+				Atualizar
+			</button>
+			<button type="button" class="btn btn-secondary ms-3" (click)="voltarParaLista()">
+				<i class="bi bi-x-circle me-2"></i>
+				Cancelar
+			</button>
+		</div>
+
+	</form>
+</div>

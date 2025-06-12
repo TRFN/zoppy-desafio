@@ -112,8 +112,9 @@ export class ListarComponent implements OnInit {
             Swal.fire({
               icon: 'error',
               title: 'Erro ao deletar cliente',
-              text: err.error.message || 'Não foi possível deletar o cliente. Tente novamente mais tarde.'
+              text: 'Não foi possível deletar o cliente. Tente novamente mais tarde.'
             });
+            console.error('Erro ao deletar cliente:', err);
           }
         });
       }
