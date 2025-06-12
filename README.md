@@ -33,7 +33,4 @@ Este repositório contém a solução do desafio técnico proposto pela Zoppy pa
 - Validações de formulário
 - Alertas personalizados com SweetAlert2
 - Interface responsiva e mobile-friendly
-
-
-
----
+- Bootstrap para uma interface intuitiva
