@@ -34,7 +34,6 @@ export class ListarComponent implements OnInit {
   }
 
   private lerClientes(filtro?: (entrada: any) => boolean): void {
-    const limparPesquisaElement = this.limparPesquisa.nativeElement;
     this.clientesService.lerClientes().subscribe((dados) => {
       this.clientes = dados;
       this.clientes.sort((a, b) => a.nome.localeCompare(b.nome)); // Ordenar por nome
@@ -45,12 +44,12 @@ export class ListarComponent implements OnInit {
 
       if (filtro) {
         this.clientes = this.clientes.filter(filtro);
-        if (limparPesquisaElement.classList.contains("d-none")) {
-          limparPesquisaElement.classList.remove("d-none");
+        if (this.limparPesquisa.nativeElement.classList.contains("d-none")) {
+          this.limparPesquisa.nativeElement.classList.remove("d-none");
         }
       } else {
-        if (!limparPesquisaElement.classList.contains("d-none")) {
-          limparPesquisaElement.classList.add("d-none");
+        if (!this.limparPesquisa.nativeElement.classList.contains("d-none")) {
+          this.limparPesquisa.nativeElement.classList.add("d-none");
         }
       }
 
@@ -82,6 +81,43 @@ export class ListarComponent implements OnInit {
 
   adicionarCliente(): void {
     this.router.navigate(['/clientes/novo']);
+  }
+
+  editarCliente(cliente: number): void {
+    this.router.navigate(['/clientes/editar', cliente]);
+  }
+
+  deletarCliente(cliente: number): void {
+    Swal.fire({
+      title: 'Tem certeza?',
+      text: "Você não poderá reverter isso!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Sim, deletar!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.clientesService.deletarCliente(cliente).subscribe({
+          next: () => {
+            Swal.fire(
+              'Deletado!',
+              'O cliente foi deletado com sucesso.',
+              'success'
+            );
+            this.lerClientes();
+          },
+          error: (err) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Erro ao deletar cliente',
+              text: err.error.message || 'Não foi possível deletar o cliente. Tente novamente mais tarde.'
+            });
+          }
+        });
+      }
+    });
   }
 
   mudarPagina(pagina: number): void {

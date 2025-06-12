@@ -1,47 +1,63 @@
+/* 
+  Estilos responsivos para telas com largura máxima de 1024px (como tablets e celulares)
+*/
 @media (max-width: 1024px) {
+
+	/* Esconde o cabeçalho da tabela */
 	.table thead {
 		display: none;
 	}
 
+	/* Cada linha da tabela passa a ser exibida como bloco (stacked) */
 	.table tbody tr {
 		display: block;
 		margin-bottom: 1rem;
 		border-bottom: 2px solid #dee2e6;
+		/* Borda inferior para separar visualmente os itens */
 	}
 
+	/* Cada célula da linha vira um item flexível com título e valor */
 	.table tbody td {
 		display: flex;
 		justify-content: space-between;
 		padding: 0.5rem;
 		white-space: normal;
+		/* Permite quebra de linha no conteúdo */
 	}
 
+	/* Adiciona o nome da coluna antes de cada valor usando o atributo data-label */
 	.table tbody td::before {
 		content: attr(data-label);
+		/* Usa o valor do atributo data-label como rótulo */
 		font-weight: 600;
 		color: #6c757d;
+		/* Cinza escuro para contraste */
 		flex-basis: 50%;
+		/* Ocupa metade do espaço disponível */
 	}
 
-
-
+	/* Remove largura fixa da última coluna no modo responsivo */
 	.table thead th:last-child {
 		width: auto;
 	}
 
+	/* Remove padding lateral da última célula em cada linha */
 	.table tbody tr td:last-child {
 		padding: 0;
 	}
 }
 
+/* Define largura fixa para a última coluna no modo desktop */
 .table thead th:last-child {
 	width: 150px;
 }
 
+/* Define padding personalizado para a última célula de cada linha */
 .table tbody tr td:last-child {
 	padding: 0 15px;
 }
 
+/* Padding padrão das células da tabela */
 .table tbody tr td {
 	padding: 1rem;
 }

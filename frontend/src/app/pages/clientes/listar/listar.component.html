@@ -46,10 +46,10 @@
 						<td data-label="Email">{{ cliente.email }}</td>
 						<td data-label="Telefone">{{ cliente.telefone }}</td>
 						<td data-label="Ações" class="text-nowrap">
-							<button class="btn btn-sm btn-outline-primary me-3">
+							<button class="btn btn-sm btn-outline-primary me-3" (click)="editarCliente(cliente.id)">
 								<i class="bi bi-pencil"></i> Editar
 							</button>
-							<button class="btn btn-sm btn-outline-danger">
+							<button class="btn btn-sm btn-outline-danger" (click)="deletarCliente(cliente.id)">
 								<i class="bi bi-trash"></i> Excluir
 							</button>
 						</td>
