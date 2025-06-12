@@ -11,59 +11,91 @@ import Swal from 'sweetalert2';
   styleUrls: ['./listar.component.css']
 })
 export class ListarComponent implements OnInit {
+  // Lista completa de clientes carregados da API
   clientes: any[] = [];
+
+  // Lista de clientes exibidos na página atual (paginada e filtrada)
   clientesExibidos: any[] = [];
+
+  // String para o filtro de pesquisa
   filtro: string = '';
 
-  paginaAtual = 1;
-  porPagina = 5;
-  totalPaginas = 1;
-  paginas: number[] = [];
+  // Controle de paginação
+  paginaAtual = 1;      // Página atual selecionada
+  porPagina = 5;        // Quantidade de clientes por página
+  totalPaginas = 1;     // Total de páginas calculadas
+  paginas: number[] = []; // Array com números das páginas para navegação
 
+  // Referências a elementos HTML para manipulação direta (inputs de filtro e botão limpar)
   @ViewChild('filtroPesquisa') filtroPesquisa!: ElementRef;
   @ViewChild('limparPesquisa') limparPesquisa!: ElementRef;
 
   constructor(
-    private clientesService: ClientesService,
-    private router: Router
+    private clientesService: ClientesService, // Serviço para CRUD de clientes
+    private router: Router                    // Navegação entre rotas
   ) { }
 
+  /**
+   * Método do ciclo de vida Angular que é chamado quando o componente é inicializado.
+   * Aqui carregamos a lista inicial de clientes.
+   */
   ngOnInit(): void {
     this.lerClientes();
-
   }
 
+  /**
+   * Lê os clientes da API via serviço.
+   * Aceita opcionalmente um filtro que será aplicado localmente na lista.
+   * Atualiza a lista de clientes, formata dados e controla visibilidade do botão de limpar filtro.
+   * Também calcula paginação.
+   *
+   * @param filtro Função de filtro opcional para filtrar clientes
+   */
   private lerClientes(filtro?: (entrada: any) => boolean): void {
     this.clientesService.lerClientes().subscribe((dados) => {
       this.clientes = dados;
-      this.clientes.sort((a, b) => a.nome.localeCompare(b.nome)); // Ordenar por nome
+
+      // Ordena os clientes por nome (alfabeticamente)
+      this.clientes.sort((a, b) => a.nome.localeCompare(b.nome));
+
+      // Formata data de nascimento e telefone para exibição
       this.clientes.map(cliente => {
         cliente.datanascimento = new Date(cliente.datanascimento).toLocaleDateString('pt-BR');
-        cliente.telefone = cliente.telefone.replace(/[^0-9]/g, '').replace(/(\d{2})(\d{4,5})(\d{4})/, '($1) $2-$3'); // Formatar telefone
+        cliente.telefone = cliente.telefone
+          .replace(/[^0-9]/g, '')
+          .replace(/(\d{2})(\d{4,5})(\d{4})/, '($1) $2-$3');
       });
 
+      // Aplica filtro, se fornecido
       if (filtro) {
         this.clientes = this.clientes.filter(filtro);
+        // Exibe o botão limpar filtro
         if (this.limparPesquisa.nativeElement.classList.contains("d-none")) {
           this.limparPesquisa.nativeElement.classList.remove("d-none");
         }
       } else {
+        // Oculta o botão limpar filtro se não há filtro aplicado
         if (!this.limparPesquisa.nativeElement.classList.contains("d-none")) {
           this.limparPesquisa.nativeElement.classList.add("d-none");
         }
       }
 
+      // Atualiza lista exibida e paginação
       this.clientesExibidos = this.clientes;
       this.totalPaginas = Math.ceil(this.clientesExibidos.length / this.porPagina);
-      this.paginaAtual = 1; // Resetar para a primeira página após o filtro
+      this.paginaAtual = 1; // Reseta para primeira página após filtro
       this.atualizarPaginacao();
     });
   }
 
+  /**
+   * Aplica o filtro de pesquisa baseado no valor do input.
+   * Filtra por nome, email ou telefone.
+   */
   filtrarClientes(): void {
     const filtro = new RegExp(this.filtroPesquisa.nativeElement.value, "gi");
     if (!filtro || this.filtroPesquisa.nativeElement.value.trim() === '') {
-      this.lerClientes();
+      this.lerClientes(); // Se filtro vazio, recarrega todos
       return;
     } else {
       this.lerClientes(cliente =>
@@ -74,19 +106,36 @@ export class ListarComponent implements OnInit {
     }
   }
 
+  /**
+   * Limpa o filtro e recarrega a lista completa.
+   */
   limparFiltro(): void {
     this.filtroPesquisa.nativeElement.value = '';
     this.lerClientes();
   }
 
+  /**
+   * Navega para a página de cadastro de novo cliente.
+   */
   adicionarCliente(): void {
     this.router.navigate(['/clientes/novo']);
   }
 
+  /**
+   * Navega para a página de edição do cliente selecionado.
+   *
+   * @param cliente ID do cliente a ser editado
+   */
   editarCliente(cliente: number): void {
     this.router.navigate(['/clientes/editar', cliente]);
   }
 
+  /**
+   * Solicita confirmação e deleta o cliente selecionado.
+   * Após sucesso, recarrega a lista.
+   *
+   * @param cliente ID do cliente a ser deletado
+   */
   deletarCliente(cliente: number): void {
     Swal.fire({
       title: 'Tem certeza?',
@@ -121,12 +170,21 @@ export class ListarComponent implements OnInit {
     });
   }
 
+  /**
+   * Muda a página exibida, respeitando limites.
+   *
+   * @param pagina Número da página para navegar
+   */
   mudarPagina(pagina: number): void {
     if (pagina < 1 || pagina > this.totalPaginas) return;
     this.paginaAtual = pagina;
     this.atualizarPaginacao();
   }
 
+  /**
+   * Atualiza a lista de clientes exibidos de acordo com a página atual
+   * e gera o array de páginas para o componente de paginação.
+   */
   atualizarPaginacao(): void {
     const inicio = (this.paginaAtual - 1) * this.porPagina;
     const fim = inicio + this.porPagina;
