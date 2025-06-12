@@ -21,6 +21,7 @@ export class ListarComponent implements OnInit {
   paginas: number[] = [];
 
   @ViewChild('filtroPesquisa') filtroPesquisa!: ElementRef;
+  @ViewChild('limparPesquisa') limparPesquisa!: ElementRef;
 
   constructor(
     private clientesService: ClientesService,
@@ -33,6 +34,7 @@ export class ListarComponent implements OnInit {
   }
 
   private lerClientes(filtro?: (entrada: any) => boolean): void {
+    const limparPesquisaElement = this.limparPesquisa.nativeElement;
     this.clientesService.lerClientes().subscribe((dados) => {
       this.clientes = dados;
       this.clientes.sort((a, b) => a.nome.localeCompare(b.nome)); // Ordenar por nome
@@ -43,6 +45,13 @@ export class ListarComponent implements OnInit {
 
       if (filtro) {
         this.clientes = this.clientes.filter(filtro);
+        if (limparPesquisaElement.classList.contains("d-none")) {
+          limparPesquisaElement.classList.remove("d-none");
+        }
+      } else {
+        if (!limparPesquisaElement.classList.contains("d-none")) {
+          limparPesquisaElement.classList.add("d-none");
+        }
       }
 
       this.clientesExibidos = this.clientes;
@@ -54,7 +63,7 @@ export class ListarComponent implements OnInit {
 
   filtrarClientes(): void {
     const filtro = new RegExp(this.filtroPesquisa.nativeElement.value, "gi");
-    if (!filtro) {
+    if (!filtro || this.filtroPesquisa.nativeElement.value.trim() === '') {
       this.lerClientes();
       return;
     } else {
