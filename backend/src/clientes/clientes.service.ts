@@ -2,6 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Cliente } from './clientes.model';
+import { CreationAttributes } from 'sequelize';
 
 @Injectable()
 export class ClientesService {
@@ -17,10 +18,10 @@ export class ClientesService {
 	async findOne(id: string): Promise<Cliente> {
 		return this.clienteModel.findByPk(id);
 	}
-	async insert(cliente: any): Promise<Cliente> {
+	async insert(cliente: CreationAttributes<Cliente>): Promise<Cliente> {
 		return this.clienteModel.create(cliente);
 	}
-	async update(id: string, cliente: any): Promise<[number, Cliente[]]> {
+	async update(id: string, cliente: CreationAttributes<Cliente>): Promise<[number, Cliente[]]> {
 		return this.clienteModel.update(cliente, {
 			where: { id },
 			returning: true,

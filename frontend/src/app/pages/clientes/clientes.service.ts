@@ -15,7 +15,7 @@ export class ClientesService {
 	}
 
 	adicionarCliente(cliente: any): Observable<any> {
-		return this.http.post<any>(`${this.apiUrl}/clientes`, cliente);
+		return this.http.put<any>(`${this.apiUrl}/clientes`, cliente);
 	}
 
 	editarCliente(id: number, cliente: any): Observable<any> {

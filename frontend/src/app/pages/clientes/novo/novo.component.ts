@@ -129,12 +129,51 @@ export class NovoComponent {
 
     this.clientesService.adicionarCliente(this.form.value).subscribe({
       next: () => {
-        alert('Cliente adicionado com sucesso!');
-        this.router.navigate(['/clientes']);
+        Swal.fire({
+          icon: 'success',
+          title: 'Cliente adicionado',
+          html: '<strong>O cliente foi cadastrado com sucesso!</strong><br>Você será redirecionado para a lista de clientes automaticamente em <span class="countdown">5</span> segundos.',
+          showCancelButton: true,
+          confirmButtonText: 'Cadastrar outro cliente',
+          cancelButtonText: 'Voltar para lista',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          allowEnterKey: false,
+          showCloseButton: false,
+          timer: 5000,
+          timerProgressBar: true,
+          didOpen: () => {
+            const countdownElement = Swal.getHtmlContainer()?.querySelector('.countdown');
+            let countdown = 5;
+            const interval = setInterval(() => {
+              if (countdownElement) {
+                countdownElement.textContent = countdown.toString();
+              }
+              countdown--;
+              if (countdown < 0) {
+                clearInterval(interval);
+              }
+            }, 1000);
+          }
+        }).then(acao => {
+          if (acao.isConfirmed) {
+            this.form.reset();
+            this.form.markAsPristine();
+            this.form.markAsUntouched();
+            this.form.updateValueAndValidity();
+          } else {
+            this.router.navigate(['/clientes']);
+          }
+        });
       },
       error: (err) => {
-        alert('Erro ao adicionar cliente: ' + err.message);
-      },
+        console.error('Erro ao adicionar cliente:', err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao adicionar cliente',
+          text: 'Não foi possível adicionar o cliente. Verifique os dados e tente novamente.',
+        });
+      }
     });
   }
 }
